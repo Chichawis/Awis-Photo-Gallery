@@ -7,6 +7,7 @@
   --dark-pink: #d1495b;
   --text-color: #4a2e35;
   --shadow-color: rgba(255, 105, 180, 0.15);
+  --card-min-width: 150px; /* Ancho dinámico por defecto */
 }
 
 * {
