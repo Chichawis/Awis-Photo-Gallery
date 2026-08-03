@@ -7,14 +7,17 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Variables globales de la app
 let allMemories = [];
 let activeCategory = 'all';
+let memoryToDelete = null; // Guarda temporalmente la foto a eliminar
 
 // Elementos del DOM
 const gallery = document.getElementById('gallery');
 const emptyState = document.getElementById('empty-state');
 const uploadModal = document.getElementById('upload-modal');
 const lightboxModal = document.getElementById('lightbox-modal');
+const confirmModal = document.getElementById('confirm-modal');
 const uploadForm = document.getElementById('upload-form');
 const submitBtn = document.getElementById('submit-btn');
+const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
 // --- Inicialización ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,17 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- Escuchadores de Eventos ---
 function setupEventListeners() {
-  // Abrir y cerrar modal de carga
+  // Modal de Subida
   document.getElementById('open-upload-btn').addEventListener('click', () => uploadModal.classList.remove('hidden'));
   document.getElementById('close-upload-btn').addEventListener('click', () => uploadModal.classList.add('hidden'));
 
-  // Cerrar lightbox
+  // Modal de Lightbox
   document.getElementById('close-lightbox-btn').addEventListener('click', () => lightboxModal.classList.add('hidden'));
 
-  // Enviar formulario de fotos
+  // Modal de Confirmar Eliminación
+  document.getElementById('cancel-delete-btn').addEventListener('click', () => {
+    confirmModal.classList.add('hidden');
+    memoryToDelete = null;
+  });
+  confirmDeleteBtn.addEventListener('click', deleteMemory);
+
+  // Enviar Formulario de Carga
   uploadForm.addEventListener('submit', handleUpload);
 
-  // Filtros de categoría
+  // Filtros de Categoría
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -81,6 +91,7 @@ function renderGallery() {
     const card = document.createElement('div');
     card.className = 'polaroid';
     card.innerHTML = `
+      <button class="delete-card-btn" title="Eliminar este recuerdo">🗑️</button>
       <div class="polaroid-img-container">
         <img src="${memory.imagen_url}" alt="${memory.titulo}" loading="lazy">
       </div>
@@ -90,9 +101,59 @@ function renderGallery() {
       </div>
     `;
 
+    // Clic en el botón de eliminar (evita abrir el lightbox)
+    const deleteBtn = card.querySelector('.delete-card-btn');
+    deleteBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Evita abrir la foto al hacer clic en borrar
+      memoryToDelete = memory;
+      confirmModal.classList.remove('hidden');
+    });
+
+    // Clic en la tarjeta para abrir Lightbox
     card.addEventListener('click', () => openLightbox(memory));
     gallery.appendChild(card);
   });
+}
+
+// --- Eliminar Recuerdo ---
+async function deleteMemory() {
+  if (!memoryToDelete) return;
+
+  confirmDeleteBtn.disabled = true;
+  confirmDeleteBtn.textContent = 'Borrando... ⏳';
+
+  try {
+    // 1. Eliminar de la base de datos Supabase
+    const { error: dbError } = await supabaseClient
+      .from('recuerdos')
+      .delete()
+      .eq('id', memoryToDelete.id);
+
+    if (dbError) throw dbError;
+
+    // 2. Eliminar la imagen del Storage de Supabase
+    if (memoryToDelete.imagen_url) {
+      const urlParts = memoryToDelete.imagen_url.split('/fotos-recuerdos/');
+      if (urlParts.length > 1) {
+        const filePath = urlParts[1];
+        await supabaseClient
+          .storage
+          .from('fotos-recuerdos')
+          .remove([filePath]);
+      }
+    }
+
+    // Cerrar modal y refrescar la galería
+    confirmModal.classList.add('hidden');
+    memoryToDelete = null;
+    await loadMemories();
+
+  } catch (err) {
+    alert('Error al eliminar la foto: ' + err.message);
+  } finally {
+    confirmDeleteBtn.disabled = false;
+    confirmDeleteBtn.textContent = 'Sí, borrar 🗑️';
+  }
 }
 
 // --- Manejar Subida de Foto ---
@@ -112,7 +173,6 @@ async function handleUpload(e) {
   submitBtn.textContent = 'Subiendo recuerdo... 💖';
 
   try {
-    // 1. Subir imagen al Bucket 'fotos-recuerdos'
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}.${fileExt}`;
     const filePath = `galeria/${fileName}`;
@@ -124,7 +184,6 @@ async function handleUpload(e) {
 
     if (uploadError) throw uploadError;
 
-    // 2. Obtener URL pública de la foto
     const { data: urlData } = supabaseClient
       .storage
       .from('fotos-recuerdos')
@@ -132,7 +191,6 @@ async function handleUpload(e) {
 
     const publicUrl = urlData.publicUrl;
 
-    // 3. Guardar registro en la tabla 'recuerdos'
     const { error: dbError } = await supabaseClient
       .from('recuerdos')
       .insert([{
@@ -145,7 +203,6 @@ async function handleUpload(e) {
 
     if (dbError) throw dbError;
 
-    // Resetear y cerrar modal
     uploadForm.reset();
     uploadModal.classList.add('hidden');
     await loadMemories();
