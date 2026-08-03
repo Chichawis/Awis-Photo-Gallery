@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestros Recuerdos 💕</title>
+  
+  <!-- Fuentes bonitas de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Sacramento&display=swap" rel="stylesheet">
+  
+  <!-- Estilos CSS -->
+  <link rel="stylesheet" href="styles.css">
 
+  <!-- Client SDK de Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Encabezado Romántico -->
+  <header class="header">
+    <h1 class="title">Nuestra Galería de Amor 💖</h1>
+    <p class="subtitle">Guardando nuestros mejores momentos juntos para siempre ✨</p>
+  </header>
+
+  <!-- Categorías / Filtros -->
+  <nav class="filters">
+    <button class="filter-btn active" data-category="all">Todos 💖</button>
+    <button class="filter-btn" data-category="Viajes">Viajes ✈️</button>
+    <button class="filter-btn" data-category="Citas">Citas ☕</button>
+    <button class="filter-btn" data-category="Aniversarios">Aniversarios 🎂</button>
+    <button class="filter-btn" data-category="Random">Random 📸</button>
+  </nav>
+
+  <!-- Contenedor Principal de la Galería -->
+  <main class="gallery-container">
+    <div id="gallery" class="gallery-grid">
+      <!-- Las fotos Polaroid se cargan aquí dinámicamente -->
+    </div>
+    <div id="empty-state" class="empty-state hidden">
+      <p>Aún no hay fotos en esta categoría... ¡Sube el primer recuerdo juntos! 💕</p>
+    </div>
+  </main>
+
+  <!-- Botón Flotante para Subir Fotos -->
+  <button id="open-upload-btn" class="fab-btn" title="Subir nuevo recuerdo">
+    💖
+  </button>
+
+  <!-- Modal 1: Formulario para Subir Foto -->
+  <div id="upload-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" id="close-upload-btn">&times;</span>
+      <h2>Añadir Nuevo Recuerdo 💌</h2>
+      
+      <form id="upload-form">
+        <div class="form-group">
+          <label for="photo-file">Selecciona la Foto 📸</label>
+          <input type="file" id="photo-file" accept="image/*" required>
+        </div>
+
+        <div class="form-group">
+          <label for="photo-title">Título del Momento ✏️</label>
+          <input type="text" id="photo-title" placeholder="Ej. Nuestra primera cita en el parque" required>
+        </div>
+
+        <div class="form-group">
+          <label for="photo-date">Fecha del Recuerdo 📅</label>
+          <input type="date" id="photo-date" required>
+        </div>
+
+        <div class="form-group">
+          <label for="photo-category">Categoría 🏷️</label>
+          <select id="photo-category" required>
+            <option value="Citas">Citas ☕</option>
+            <option value="Viajes">Viajes ✈️</option>
+            <option value="Aniversarios">Aniversarios 🎂</option>
+            <option value="Random">Random 📸</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="photo-note">Mensaje o Nota Romántica 📝</label>
+          <textarea id="photo-note" rows="3" placeholder="Escribe algo lindo sobre este día..." required></textarea>
+        </div>
+
+        <button type="submit" id="submit-btn" class="save-btn">Guardar para Siempre 💕</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Lightbox (Pantalla completa al hacer clic) -->
+  <div id="lightbox-modal" class="modal hidden">
+    <div class="lightbox-content">
+      <span class="close-btn" id="close-lightbox-btn">&times;</span>
+      <img id="lightbox-img" src="" alt="Recuerdo">
+      <div class="lightbox-details">
+        <span id="lightbox-badge" class="badge"></span>
+        <h3 id="lightbox-title"></h3>
+        <p id="lightbox-date" class="date-text"></p>
+        <p id="lightbox-note" class="note-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
