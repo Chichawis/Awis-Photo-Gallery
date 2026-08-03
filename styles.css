@@ -255,7 +255,7 @@ body {
   background-color: #ff4d6d;
 }
 
-/* Lightbox */
+
 .lightbox-content {
   max-width: 600px;
   text-align: center;
@@ -299,4 +299,116 @@ body {
   padding: 40px;
   font-size: 1.1rem;
   color: #996b77;
+}
+
+.delete-card-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--soft-pink);
+  color: #d1495b;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+
+
+.polaroid:hover .delete-card-btn {
+  opacity: 1;
+}
+
+.delete-card-btn:hover {
+  background-color: #ff4d6d;
+  color: white;
+  border-color: #ff4d6d;
+  transform: scale(1.15) rotate(12deg);
+}
+
+@media (hover: none) {
+  .delete-card-btn {
+    opacity: 1;
+  }
+}
+
+.confirm-box {
+  text-align: center;
+  padding: 30px 25px;
+  animation: popUpBounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popUpBounce {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.confirm-icon {
+  font-size: 3.2rem;
+  margin-bottom: 10px;
+  display: inline-block;
+  animation: heartPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+.confirm-box h2 {
+  font-size: 1.4rem;
+  color: var(--text-color);
+  margin-bottom: 8px;
+}
+
+.confirm-box p {
+  font-size: 0.95rem;
+  color: #7a525d;
+  margin-bottom: 20px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-cancel, .btn-delete {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-cancel {
+  background-color: #f0f0f0;
+  color: var(--text-color);
+}
+
+.btn-cancel:hover {
+  background-color: #e4e4e4;
+  transform: translateY(-2px);
+}
+
+.btn-delete {
+  background-color: #ff4d6d;
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
+}
+
+.btn-delete:hover {
+  background-color: #d1495b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(209, 73, 91, 0.4);
 }
