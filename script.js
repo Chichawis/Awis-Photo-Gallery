@@ -53,6 +53,15 @@ function setupEventListeners() {
       renderGallery();
     });
   });
+
+// Deslizador de Tamaño de Fotos
+  const sizeSlider = document.getElementById('size-slider');
+  if (sizeSlider) {
+    sizeSlider.addEventListener('input', (e) => {
+      const newSize = e.target.value;
+      document.documentElement.style.setProperty('--card-min-width', `${newSize}px`);
+    });
+  }
 }
 
 // --- Cargar recuerdos desde Supabase ---
