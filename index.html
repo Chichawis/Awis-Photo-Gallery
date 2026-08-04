@@ -66,6 +66,7 @@
         <div class="form-group">
           <label for="photo-file">Selecciona la Foto </label>
           <input type="file" id="photo-file" accept="image/*" required>
+          <input type="file" id="photo-file" accept="image/*" multiple required>
         </div>
 
         <div class="form-group">
@@ -97,11 +98,20 @@
     </div>
   </div>
 
-  <!-- Modal 2: Lightbox (Pantalla completa al hacer clic) -->
+  <!-- Modal 2: Lightbox (Pantalla completa con Carrusel de Flechas) -->
   <div id="lightbox-modal" class="modal hidden">
     <div class="lightbox-content">
       <span class="close-btn" id="close-lightbox-btn">&times;</span>
-      <img id="lightbox-img" src="" alt="Recuerdo">
+      
+      <!-- Contenedor de Imagen con Flechas -->
+      <div class="lightbox-img-wrapper">
+        <button id="prev-img-btn" class="lightbox-arrow left-arrow">❮</button>
+        <img id="lightbox-img" src="" alt="Recuerdo">
+        <button id="next-img-btn" class="lightbox-arrow right-arrow">❯</button>
+      </div>
+
+      <div id="lightbox-counter" class="img-counter">1 / 1</div>
+
       <div class="lightbox-details">
         <span id="lightbox-badge" class="badge"></span>
         <h3 id="lightbox-title"></h3>
