@@ -498,3 +498,105 @@ input[type=range]::-moz-range-thumb:hover {
   transform: scale(1.3);
   background: #ff4d6d;
 }
+
+/* ==========================================
+   ÁLBUM DE MÚLTIPLES FOTOS (STACK Y CARRUSEL)
+   ========================================== */
+
+/* Efecto de fotos empalmadas tras la Polaroid principal */
+.polaroid.stacked::before,
+.polaroid.stacked::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(255, 105, 180, 0.15);
+  z-index: -1;
+  transition: transform 0.3s ease;
+}
+
+.polaroid.stacked::before {
+  transform: rotate(-3.5deg) translate(-4px, 2px);
+}
+
+.polaroid.stacked::after {
+  transform: rotate(3.5deg) translate(4px, 2px);
+}
+
+.polaroid.stacked:hover::before {
+  transform: rotate(-6deg) translate(-7px, 4px);
+}
+
+.polaroid.stacked:hover::after {
+  transform: rotate(6deg) translate(7px, 4px);
+}
+
+/* Medallita/Badge de cantidad de fotos */
+.count-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--soft-pink);
+  color: var(--dark-pink);
+  padding: 3px 9px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  z-index: 5;
+}
+
+/* Lightbox: Envoltorio de la imagen y flechas */
+.lightbox-img-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botones de Flechas (< y >) */
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--soft-pink);
+  color: var(--dark-pink);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.lightbox-arrow:hover {
+  background: var(--primary-pink);
+  color: white;
+  border-color: var(--primary-pink);
+  transform: translateY(-50%) scale(1.15);
+}
+
+.left-arrow { left: -12px; }
+.right-arrow { right: -12px; }
+
+.lightbox-arrow.hidden {
+  display: none;
+}
+
+.img-counter {
+  font-size: 0.85rem;
+  color: #996b77;
+  margin-top: 8px;
+  font-weight: 600;
+}
